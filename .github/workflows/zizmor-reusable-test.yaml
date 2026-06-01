@@ -4,11 +4,9 @@
 
 # Cross-org consumer test for the zizmor reusable workflow.
 #
-# Calls the reusable from the fork and overrides reusable-repository so
-# the reusable's self-checkout resolves to the fork rather than the
-# canonical lfreleng-actions/zizmor-reusable. This exercises the real
-# production path: a remote workflow_call where github.job_workflow_sha
-# must resolve to the reusable repository's commit.
+# Calls the reusable from the fork. This exercises the real production
+# path: a remote workflow_call where the wrapper runs the co-located
+# composite action, which reads its bundled pin via github.action_path.
 #
 # This file is a temporary test harness and is not part of the template.
 
@@ -24,9 +22,7 @@ permissions: {}
 jobs:
   zizmor:
     # yamllint disable-line rule:line-length
-    uses: modeseven-lfreleng-actions/zizmor-reusable/.github/workflows/reuse-zizmor.yaml@93391f69a9f58aa1cf4945991c48e0436f3e7f71  # untagged test build
+    uses: modeseven-lfreleng-actions/zizmor-reusable/.github/workflows/reuse-zizmor.yaml@fe54ff015ef22ecf89b3b41dc58ba5d2e1f68a26  # untagged test build
     permissions:
       contents: read
       security-events: write
-    with:
-      reusable-repository: 'modeseven-lfreleng-actions/zizmor-reusable'
