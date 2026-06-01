@@ -2,15 +2,15 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: 2026 The Linux Foundation
 
-# Cross-org consumer test for the zizmor reusable workflow.
+# Cross-org consumer test: call the composite action directly.
 #
-# Calls the reusable from the fork. This exercises the real production
-# path: a remote workflow_call where the wrapper runs the co-located
-# composite action, which reads its bundled pin via github.action_path.
+# This exercises the reliable production path: the consumer checks out
+# its own repository, then runs the action, which reads its bundled
+# zizmor pin and summary script via github.action_path.
 #
 # This file is a temporary test harness and is not part of the template.
 
-name: '🌈 Zizmor Reusable (cross-org test)'
+name: '🌈 Zizmor Action (cross-org test)'
 
 # yamllint disable-line rule:truthy
 on:
@@ -21,8 +21,27 @@ permissions: {}
 
 jobs:
   zizmor:
-    # yamllint disable-line rule:line-length
-    uses: modeseven-lfreleng-actions/zizmor-reusable/.github/workflows/reuse-zizmor.yaml@fe54ff015ef22ecf89b3b41dc58ba5d2e1f68a26  # untagged test build
+    name: 'Audit workflows'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
-      security-events: write
+    steps:
+      - name: 'Harden runner'
+        # yamllint disable-line rule:line-length
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411  # v2.19.4
+        with:
+          egress-policy: 'audit'
+
+      - name: 'Checkout repository under audit'
+        # yamllint disable-line rule:line-length
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: 'Run zizmor audit'
+        # yamllint disable-line rule:line-length
+        uses: modeseven-lfreleng-actions/zizmor-reusable@fe54ff015ef22ecf89b3b41dc58ba5d2e1f68a26  # untagged test build
+        with:
+          persona: 'regular'
+          min-severity: 'medium'
