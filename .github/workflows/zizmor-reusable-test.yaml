@@ -41,7 +41,7 @@ jobs:
 
       - name: 'Run zizmor audit'
         # yamllint disable-line rule:line-length
-        uses: modeseven-lfreleng-actions/zizmor-reusable@fe54ff015ef22ecf89b3b41dc58ba5d2e1f68a26  # untagged test build
+        uses: modeseven-lfreleng-actions/zizmor-scan-action@10838d8ed03d2cfbc1fad51c2901977cc652ed8f  # untagged test build
         with:
           persona: 'regular'
           min-severity: 'medium'
